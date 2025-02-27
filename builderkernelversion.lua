@@ -1,2 +1,4 @@
 local ver = 1
-script.Parent.Value = ver
+script.Parent.Value = Ver
+
+print("last kernel version:", ver)
