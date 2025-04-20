@@ -18,7 +18,9 @@ local message6 = "RBXShade | Old lighting removed!"
 function lighting()
 	print(message4)
 	local oldlight = game.Lighting:GetChildren()
-	oldlight.Enabled = false
+	for _, v in ipairs(oldlight) do
+		v.Enabled = false
+	end
 	print(message6)
 	task.wait(3)
 
@@ -27,51 +29,50 @@ function lighting()
 	outlineFolder.Parent = game.Workspace
 	outlineFolder.Name = "RBXShade"
 
-	local a=Instance.new"Atmosphere"
-	a.Offset=0.25
-	a.Color=Color3.fromRGB(199,199,199)
-	a.Decay=Color3.fromRGB(106,112,125)
-	a.Density=0.3
-	a.Parent=game:GetService"Lighting"
+	local a = Instance.new("Atmosphere")
+	a.Offset = 0.25
+	a.Color = Color3.fromRGB(199, 199, 199)
+	a.Decay = Color3.fromRGB(106, 112, 125)
+	a.Density = 0.3
+	a.Parent = game:GetService("Lighting")
 
-	local b=Instance.new"BloomEffect"
-	b.Intensity=1
-	b.Threshold=2
-	b.Parent=game:GetService"Lighting"
+	local b = Instance.new("BloomEffect")
+	b.Intensity = 1
+	b.Threshold = 2
+	b.Parent = game:GetService("Lighting")
 
-	local c=Instance.new"DepthOfFieldEffect"
-	c.Enabled=false
-	c.FarIntensity=0.1
-	c.InFocusRadius=30
-	c.Parent=game:GetService"Lighting"
+	local c = Instance.new("DepthOfFieldEffect")
+	c.Enabled = false
+	c.FarIntensity = 0.1
+	c.InFocusRadius = 30
+	c.Parent = game:GetService("Lighting")
 
-	local d=Instance.new"Sky"
-	d.SkyboxUp="rbxassetid://6412503613"
-	d.MoonTextureId="rbxassetid://6444320592"
-	d.SkyboxLf="rbxassetid://6444884337"
-	d.SkyboxBk="rbxassetid://6444884337"
-	d.SkyboxFt="rbxassetid://6444884337"
-	d.SkyboxDn="rbxassetid://6444884785"
-	d.SunTextureId="rbxassetid://6196665106"
-	d.SunAngularSize=11
-	d.SkyboxRt="rbxassetid://6444884337"
-	d.Parent=game:GetService"Lighting"
+	local d = Instance.new("Sky")
+	d.SkyboxUp = "rbxassetid://6412503613"
+	d.MoonTextureId = "rbxassetid://6444320592"
+	d.SkyboxLf = "rbxassetid://6444884337"
+	d.SkyboxBk = "rbxassetid://6444884337"
+	d.SkyboxFt = "rbxassetid://6444884337"
+	d.SkyboxDn = "rbxassetid://6444884785"
+	d.SunTextureId = "rbxassetid://6196665106"
+	d.SunAngularSize = 11
+	d.SkyboxRt = "rbxassetid://6444884337"
+	d.Parent = game:GetService("Lighting")
 
-	local e=Instance.new"SunRaysEffect"
-	e.Intensity=0.01
-	e.Spread=0.1
-	e.Parent=game:GetService"Lighting"
+	local e = Instance.new("SunRaysEffect")
+	e.Intensity = 0.01
+	e.Spread = 0.1
+	e.Parent = game:GetService("Lighting")
 	print(message2)
 end
 
 lighting()
 
--- Функция для создания обводки вокруг объекта
+-- Функция создания обводки для партов
 local function createOutline(part)
-	
 	-- Создаём новый парт вокруг исходного с меньшими размерами
 	local outlinePart = Instance.new("Part")
-	outlinePart.CanCollide = false  -- Чтобы не мешал
+	outlinePart.CanCollide = false  -- Чтоб не мешал
 	outlinePart.Size = part.Size + Vector3.new(0.1, 0.1, 0.1)  -- Увеличиваем размер на 1 по каждому направлению
 	outlinePart.Position = part.Position
 	outlinePart.Anchored = part.Anchored
@@ -100,11 +101,18 @@ for _, obj in pairs(game.Workspace:GetChildren()) do
 	-- Проверяем, является ли объект партом или партоподобным и есть ли у него Humanoid
 	if (obj:IsA("Part") or obj:IsA("MeshPart")) and not obj:FindFirstChild("Humanoid") then
 		local outlinePart, highlight = createOutline(obj)
-
-		-- Не включаем Highlight, так как он всегда должен быть выключен
 		highlight.Enabled = false  -- Оставляем всегда выключенным
 	end
 end
+
+-- Следим за добавлением новых объектов в Workspace
+game.Workspace.ChildAdded:Connect(function(obj)
+	-- Проверяем новые объекты на предмет нужных характеристик
+	if (obj:IsA("Part") or obj:IsA("MeshPart")) and not obj:FindFirstChild("Humanoid") then
+		local outlinePart, highlight = createOutline(obj)
+		highlight.Enabled = false  -- Оставляем всегда выключенным
+	end
+end)
 
 local command = Instance.new("TextChatCommand")
 command.Parent = game.TextChatService
