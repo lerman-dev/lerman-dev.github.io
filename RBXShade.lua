@@ -92,7 +92,6 @@ local function createOutline(part)
 	highlight.Parent = outlinePart   -- Highlight должен быть в парт для обновлений
 	highlight.Enabled = false      -- Изначально выключаем
 	print(message3.. part.Name)
-	task.wait(0.1)
 	return outlinePart, highlight
 end
 
